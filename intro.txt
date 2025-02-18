@@ -1,0 +1,2 @@
+Initial target would be to preprocess data :
+preprocess ->  Web Scrapping And Data modelling so that our data remains consistent
