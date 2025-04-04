@@ -1,0 +1,45 @@
+const mongoose = require('mongoose');
+
+// Sub-schema for Treatments
+const treatmentSchema = new mongoose.Schema({
+    name: { type: String, required: true },  // e.g., "MRI Scan"
+    price: { type: Number, required: true },
+    currency: { type: String, default: "USD" }
+});
+
+// Sub-schema for Reviews
+const reviewSchema = new mongoose.Schema({
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    rating: { type: Number, min: 1, max: 5, required: true },
+    reviewText: { type: String },
+    createdAt: { type: Date, default: Date.now }
+});
+
+// Main Hospital Schema
+const hospitalSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    address: {
+        street: { type: String },
+        city: { type: String, required: true },
+        state: { type: String },
+        country: { type: String },
+        coordinates: { 
+            lat: { type: Number },
+            lng: { type: Number }
+        }
+    },
+    contact: {
+        phone: { type: String },
+        email: { type: String },
+        website: { type: String }
+    },
+    specialties: [{ type: String }],  // e.g., ['Cardiology', 'Neurology']
+    treatments: [treatmentSchema],  // Embedded Treatments List
+    reviews: [reviewSchema],  // Embedded Reviews List
+    ratings: {
+        averageRating: { type: Number, min: 1, max: 5, default: 0 },
+        totalReviews: { type: Number, default: 0 }
+    }
+}, { timestamps: true });
+
+module.exports = mongoose.model('Hospital', hospitalSchema);
